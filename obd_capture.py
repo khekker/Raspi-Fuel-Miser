@@ -149,7 +149,7 @@ class OBD_Capture():
 			nStartTime = time.time()
 			x = 0
 			while True:
-				has_ShutdownButtonBeenPressed(self)
+				self.has_ShutdownButtonBeenPressed()
 				current_time = time.time()
 				sqlInsert = sqlInsertTemplate + '"' + str(current_time) + '",'
 				results = {}
