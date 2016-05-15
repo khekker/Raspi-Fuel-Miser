@@ -17,7 +17,7 @@ class HD44780:
 		self.pins_db=pins_db
 		self.contrast = PWMLED(15,frequency=25)
 		self.contrast.on()
-		self.contrast.value=.95
+		self.contrast.value=.55
 		self.Contrastbutton = Button(14)
 		self.Contrastbutton.when_pressed = self.ContrastPressed
 		
@@ -33,6 +33,7 @@ class HD44780:
 		for pin in self.pins_db:
 			GPIO.setup(pin, GPIO.OUT)
 		self.clear()
+		
         
 	def ContrastPressed(self):
 		nCurrentContrastValue = self.contrast.values.next() + .1
@@ -99,7 +100,7 @@ if __name__ == '__main__':
 	lcd = HD44780()
 	while True:
 		lcd.clear()
-		sleep(.2)
-		lcd.message("Database obdii00005.db created...")
+		sleep(.1)
+		lcd.message("Database created...\nTesting")
 		sleep(1.0)
 	GPIO.cleanup()

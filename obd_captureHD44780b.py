@@ -26,7 +26,7 @@ class OBD_Capture():
 		if self.nShutdownButtonPressed == True:
 			if time.time() - self.tShutdownTime < 3:
 				oLCD.clear()
-				time.sleep(.3)
+				time.sleep(.1)
 				oLCD.message("Shutting down...")
 				#self.cursor.close()
 				#self.conn.close()
@@ -35,7 +35,7 @@ class OBD_Capture():
 		else:
 			if (self.nCurrentSpeed == 0):
 				oLCD.clear()
-				time.sleep(.3)
+				time.sleep(.1)
 				oLCD.message("Press within 3s \nto shutdown...")
 				self.nShutdownButtonPressed = True
 				self.tShutdownTime = time.time()
@@ -71,7 +71,7 @@ class OBD_Capture():
 
 	def LCDprint(self,cShortTerm,cLongTerm):
 		oLCD.clear()
-		time.sleep(.3)
+		time.sleep(.1)
 		oLCD.message(cShortTerm + "\n" + cLongTerm)
 		
 	def FormatForDisplayMode(self,cInstance,nValue):
@@ -119,7 +119,7 @@ class OBD_Capture():
 		try:
 			print nStartSec
 			#cLimit = " and time_read > " + str(nStartSec) + " order by time_read desc limit 6)"
-			cLimit = str(nStartSec) + " and time_read <= " + str(nStartSec + 3) + ' and speed > "0"'
+			cLimit = str(nStartSec) + " and time_read <= " + str(nStartSec + 5) + ' and speed > "0"'
 			#print cLimit
 			#self.cursor.execute('''SELECT avg((3600 * maf)/(9069.90 * speed)) FROM (select maf,speed from SensorReadings where speed > "0" and maf > "0" and rpm != "NODATA" ''' + cLimit)
 			self.cursor.execute('''SELECT avg(fuelconsumption),speed FROM SensorReadings WHERE time_read >= ''' + cLimit)
@@ -127,7 +127,7 @@ class OBD_Capture():
 			#print data
 			if data[0] == None:
 				self.nCurrentSpeed = 0
-				print "Idling"
+				print "No data received in last polling period..."
 			else:	
 				self.nCurrentSpeed = data[1]
 				print "Current speed: " + str(self.nCurrentSpeed)
@@ -157,7 +157,7 @@ class OBD_Capture():
 		
 	def capture_data(self,lEmulate = False):
 		if lEmulate == False:
-			print "false"
+			#print "false"
 			#Creating new database
 			for kounter in range(10000):
 				cKounter = "{0:05d}".format(kounter)
@@ -203,7 +203,7 @@ class OBD_Capture():
 				cMessage = msg
 				
 			oLCD.clear()
-			time.sleep(.3)
+			time.sleep(.1)
 			oLCD.message(cMessage)
 			
 			#sqlInsertTemplate = sqlInsertTemplate[:sqlInsertTemplate.rfind(",")] + ") VALUES ("
@@ -221,6 +221,7 @@ class OBD_Capture():
 			if lEmulate == False:
 				nStartTime = time.time()
 			else:
+				#Change the number on the following line to the database you wish to examine.
 				self.conn = sqlite3.connect("obdii00013.db")
 				self.cursor = self.conn.cursor()
 				self.cursor.execute('''SELECT time_read from SensorReadings limit 1''')
@@ -293,7 +294,7 @@ class OBD_Capture():
 					#print y
 					print cTripAverageDisplay
 					print current_time
-				if int(x)%3 == 0:
+				if int(x)%5 == 0:
 					self.LCDprint(cInstantaneousAverageDisplay,cTripAverageDisplay)
 				if lEmulate:
 					current_time = nStartTime + x
@@ -316,15 +317,15 @@ if __name__ == "__main__":
 		if cArgumentPassed == "emulate":
 			lEmulate = True
 			
-	if not lEmulate:
-		#Creating new stdout redirection file
-		for kounter in range(10000):
-			cKounter = "{0:05d}".format(kounter)
-			cNewStdOutLog = "stdoutlog" + cKounter + ".txt"
-			if not (os.path.exists(cNewStdOutLog)):
-					break
+	#if not lEmulate:
+		##Creating new stdout redirection file
+		#for kounter in range(10000):
+			#cKounter = "{0:05d}".format(kounter)
+			#cNewStdOutLog = "stdoutlog" + cKounter + ".txt"
+			#if not (os.path.exists(cNewStdOutLog)):
+				#break
 					
-		sys.stdout = open(cNewStdOutLog,'w')
+		#sys.stdout = open(cNewStdOutLog,'w')
 		
 	oLCD = HD44780.HD44780()
 	time.sleep(1) #Apparently, the class invocation takes some time to set up
