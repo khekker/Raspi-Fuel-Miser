@@ -8,5 +8,6 @@ It also contains the PCB Fritzing file, which can be turned into Gerber files, r
 In order for this device to run, you'll need to following Python files installed:
 obd_captureHD44780.py,
 HD44780.py,obd_io.py,obd_utils.py,obd_sensors.py.
+Furthermore, Sqlite3 needs to be installed (sudo apt-get install sqlite3)
 In order for the Python script to automatically start when the Pi boots up, I added this line to /etc/rc.local :
 (cd /home/pi/pythonprogs;python obd_capture.py)&
