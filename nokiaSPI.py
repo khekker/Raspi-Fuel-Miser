@@ -36,8 +36,13 @@ ON = 1
 OFF = 0
 
 # GPIO's
+'''
 DC = 3 # gpio pin 15 = wiringpi no. 3 (BCM 22)
 RST = 0 # gpio pin 11 = wiringpi no. 0 (BCM 17)
+'''
+#The default DC and RST pins for SPI have been changed in RPi 3 and 2.
+DC  = 4 # gpio pin 16 = wiringpi np. 4 (BCM 23)
+RST = 5 # gpio pin 18 = wiringpi no. 5 (BCM 24)
 LED = 1 # gpio pin 12 = wiringpi no. 1 (BCM 18)
 
 # SPI connection
@@ -431,6 +436,8 @@ class NokiaSPI:
 		self.gotoxy(0, 0)
 		# Put on display with reversed bit order
 		wiringpi.digitalWrite(DC, ON)
+		#self.spi.writebytes( [ BITREVERSE[ord(x)] for x in list(rim.tostring()) ] )
+		# "tostring" won't work anymore, use "tobytes"
 		self.spi.writebytes( [ BITREVERSE[ord(x)] for x in list(rim.tostring()) ] )
 
 		# Switch back to horizontal write mode for text
